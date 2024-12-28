@@ -1,4 +1,3 @@
-
 services:
   backend:
     build:
@@ -18,6 +17,16 @@ services:
     container_name: frontend
     ports:
       - "3000:3000"
+
+  develop:
+    build:
+      context: ./frontend
+    container_name: frontend_develop
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+    command: npm run dev
 
   postgres:
     image: postgres:15

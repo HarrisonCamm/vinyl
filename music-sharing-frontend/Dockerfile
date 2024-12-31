@@ -1,29 +1,22 @@
-# Use Node.js for building the app
-FROM node:18-alpine AS build
+FROM node:18-alpine
 
 # Set the working directory
 WORKDIR /app
 
 # Copy package.json and package-lock.json
-COPY package*.json ./
+COPY package.json package-lock.json ./
 
 # Install dependencies
-RUN npm install
+RUN npm install --legacy-peer-deps
 
-# Copy the application code
+# Copy the rest of the application code
 COPY . .
 
-# Build the application
+# Build the Next.js application
 RUN npm run build
 
-# Use a lightweight web server to serve the app
-FROM nginx:alpine
-
-# Copy the build files to Nginx's HTML directory
-COPY --from=build /app/out /usr/share/nginx/html
-
-# Expose the port
+# Expose the port that Next.js will run on
 EXPOSE 3000
 
-# Start the Nginx server
-CMD ["nginx", "-g", "daemon off;"]
+# Start the Next.js application
+CMD ["npm", "run", "start"]
